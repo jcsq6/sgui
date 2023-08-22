@@ -96,6 +96,8 @@ public:
 		verify_radius();
 	}
 
+	virtual ~rounded_rectangle() = default;
+
 	// will update buffers if object has been initialized... use sparingly
 	void set_dims(vec2 new_dims, float new_radius)
 	{
@@ -152,6 +154,8 @@ public:
 		return ptr_handle<drawable_rectangle>(new drawable_rectangle(min, dims, color));
 	}
 
+	virtual ~drawable_rectangle() = default;
+
 	vec2 min() const override;
 	vec2 size() const override;
 
@@ -177,6 +181,8 @@ public:
 	{
 		return ptr_handle<drawable_rounded_rectangle>(new drawable_rounded_rectangle(min, dims, radius, color));
 	}
+
+	virtual ~drawable_rounded_rectangle() = default;
 
 	vec2 min() const override;
 	vec2 size() const override;
@@ -204,6 +210,8 @@ public:
 		return ptr_handle<button>(new button(min, dims, color));
 	}
 
+	virtual ~button() = default;
+
 	vec2 min() const override;
 	vec2 size() const override;
 
@@ -228,6 +236,8 @@ public:
 	{
 		return ptr_handle<rounded_button>(new rounded_button(min, dims, radius, color));
 	}
+
+	virtual ~rounded_button() = default;
 
 	vec2 min() const override;
 	vec2 size() const override;
