@@ -151,15 +151,6 @@ void font::character::load(const font *_font, uint32_t c)
 	text.set_parameter(GL_TEXTURE_BORDER_COLOR, value(transparent));
 }
 
-font::character::character(const font::character &other)
-{
-	throw std::runtime_error("You shouldn't be able to get here... For some reason the copy constructor was called for character");
-}
-font::character &font::character::operator=(const font::character &other)
-{
-	throw std::runtime_error("You shouldn't be able to get here... For some reason the copy assignment was called for character");
-}
-
 namespace text_detail
 {
 	shader &get_shader()
@@ -214,7 +205,7 @@ namespace text_detail
 
 			glDisable(GL_CULL_FACE);
 
-			static vao buffer = detail::make_shape_vao(detail::rect_obj_vbo(), detail::text_pos_vbo());
+			static vao buffer = detail::make_shape_vao(detail::rect_obj_vbo(), &detail::text_pos_vbo());
 
 			static auto &program = text_detail::get_shader();
 			program.set_uniform("SGUI_Model", model);
@@ -359,7 +350,7 @@ void text::update_bounds() const
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 }
 
-void text::do_flags()
+void text::obj_init()
 {
 	if (!M_parent)
 		return;

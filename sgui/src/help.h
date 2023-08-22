@@ -17,7 +17,8 @@ DETAIL_BEG
 vbo &rect_obj_vbo();
 const vbo &text_pos_vbo();
 
-vao make_shape_vao(const vbo &points, const vbo &text_points);
+vao make_shape_vao(const vbo &points, const vbo *text_points);
+void make_shape_vao(vao &res, const vbo &points, const vbo *text_points);
 
 shader &global_color_shader();
 

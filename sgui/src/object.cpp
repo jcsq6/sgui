@@ -39,7 +39,7 @@ vec2 object::absolute_min() const
 	return min();
 }
 
-void object::do_flags()
+void object::obj_init()
 {
 }
 
@@ -49,8 +49,9 @@ void object::on_attach(object *child) const
 
 void object::setup()
 {
-	do_flags();
-	for (auto o : M_children)
+	obj_init();
+	M_has_init = true;
+	for (const auto &o : M_children)
 		o->setup();
 }
 

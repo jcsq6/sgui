@@ -60,25 +60,32 @@ shader &global_color_shader()
 	return res;
 }
 
-vao make_shape_vao(const vbo &points, const vbo &text_points)
+vao make_shape_vao(const vbo &points, const vbo *text_points)
+{
+	vao res;
+	res.generate();
+
+	make_shape_vao(res, points, text_points);
+
+	return res;
+}
+
+void make_shape_vao(vao &res, const vbo &points, const vbo *text_points)
 {
 	detail::vao_lock lvao;
 	detail::vbo_lock lvbo;
 
-	vao res;
-	res.generate();
-
 	res.use();
-
 	points.use();
 	glEnableVertexAttribArray(pos_loc);
 	glVertexAttribPointer(pos_loc, 2, GL_FLOAT, GL_FALSE, 0, (void *)0);
 
-	text_points.use();
-	glEnableVertexAttribArray(textPos_loc);
-	glVertexAttribPointer(textPos_loc, 2, GL_FLOAT, GL_FALSE, 0, (void *)0);
-
-	return res;
+	if (text_points)
+	{
+		text_points->use();
+		glEnableVertexAttribArray(textPos_loc);
+		glVertexAttribPointer(textPos_loc, 2, GL_FLOAT, GL_FALSE, 0, (void *)0);
+	}
 }
 
 DETAIL_END

@@ -5,6 +5,7 @@
 #include "math/vec.h"
 #include <vector>
 #include <algorithm>
+#include <memory>
 
 SGUI_BEG
 
@@ -16,40 +17,31 @@ namespace attach_flags
 	};
 }
 
+template <typename T>
+using ptr_handle = std::shared_ptr<T>;
+
 class window;
 
 class object
 {
 public:
-	inline object() : M_parent{}, M_flags{} {}
-	inline object(object *parent) : M_parent{ parent }, M_flags{}
-	{
-		M_parent->M_children.push_back(this);
-	}
-
+	inline object() : M_parent{}, M_flags{}, M_has_init{} {}
 	virtual ~object() = default;
 
 	inline object *parent() const { return M_parent; }
-	const std::vector<object *> children() const { return M_children; }
-	
-	void attach(object &parent, int flags = 0)
-	{
-		detach();
+	const std::vector<ptr_handle<object>> children() const { return M_children; }
 
-		M_flags = flags;
-		M_parent = &parent;
-		parent.M_children.push_back(this);
-		parent.on_attach(this);
+	void add_child(const ptr_handle<object> &child, int flags = 0)
+	{
+		add_child(ptr_handle<object>(child), flags);
 	}
 
-	void detach()
+	void add_child(ptr_handle<object> &&child, int flags = 0)
 	{
-		if (M_parent)
-		{
-			if (auto loc = std::find(M_parent->M_children.begin(), M_parent->M_children.end(), this); loc != M_parent->M_children.end())
-				M_parent->M_children.erase(loc);
-			M_parent = nullptr;
-		}
+		child->M_parent = this;
+		child->M_flags = flags;
+		on_attach(child.get());
+		M_children.push_back(std::move(child));
 	}
 
 	// draws *this* in reference to absolute_min (second argument) with no setup
@@ -69,15 +61,17 @@ public:
 	// returns minimum point for object in reference to greatest-grandparent/parent's minimum
 	vec2 absolute_min() const;
 	
-	// call before use (will call do_flags for this and M_children)
+	// call before use (will call obj_init for this and M_children)
 	void setup();
 protected:
 	object *M_parent;
-	std::vector<object *> M_children;
+	std::vector<ptr_handle<object>> M_children;
 	int M_flags;
+	// useful when a child of object manages buffers or other openGL related objects
+	bool M_has_init;
 	
-	// setup *this* in reference to M_parent according to M_flags
-	virtual void do_flags();
+	// setup *this* in reference to M_parent according to M_flags, and also initialize class for use with windows
+	virtual void obj_init();
 	// function in parent class when a child *child* is attached to it
 	virtual void on_attach(object *child) const;
 };

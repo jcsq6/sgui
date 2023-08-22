@@ -66,10 +66,12 @@ int application::run()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 
-	M_window->init();
+	M_window->create();
 	M_window->grab_context();
 	if (!glew_handle::get_instance())
 		return APP_FAILURE;
+
+	M_window->setup();
 
 	M_window->run();
 

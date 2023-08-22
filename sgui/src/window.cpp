@@ -37,24 +37,24 @@ void window::draw_raw(const window *, vec2) const
 
 	glClearColor(1, 1, 1, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
-	for (auto w : M_children)
+	for (const auto &w : M_children)
 		w->draw_raw(this, {});
 	glfwSwapBuffers(M_window);
 }
 
 void window::on_attach(object *child) const
 {
-	if (M_window)
+	if (M_has_init)
 		child->setup();
 }
 
-void window::handle_children_input(const std::vector<object *> &children, vec2 absolute_min) const
+void window::handle_children_input(const std::vector<std::shared_ptr<object>> &children, vec2 absolute_min) const
 {
 	if (M_mouse.loc_changed)
 	{
-		for (auto w : children)
+		for (const auto &w : children)
 		{
-			if (clickable *c = dynamic_cast<clickable *>(w))
+			if (clickable *c = dynamic_cast<clickable *>(w.get()))
 			{
 				bool in_bounds = c->in_bounds(M_mouse.loc, absolute_min);
 
@@ -86,9 +86,9 @@ void window::handle_children_input(const std::vector<object *> &children, vec2 a
 	}
 	else
 	{
-		for (auto w : children)
+		for (const auto &w : children)
 		{
-			if (clickable *c = dynamic_cast<clickable *>(w))
+			if (clickable *c = dynamic_cast<clickable *>(w.get()))
 				set_clickable_pressed(c);
 
 			if (w->children().size())
@@ -124,9 +124,6 @@ void window::set_clickable_pressed(clickable *c) const
 
 void window::run()
 {
-	for (auto w : M_children)
-		w->setup();
-
 	while (!glfwWindowShouldClose(M_window))
 	{
 		M_mouse.loc_changed = false;
@@ -157,7 +154,7 @@ vec2 window::size() const
 	return viewport_size();
 }
 
-void window::init()
+void window::create()
 {
 	M_window = glfwCreateWindow(M_viewport.size.x, M_viewport.size.y, M_name.c_str(), nullptr, nullptr);
 

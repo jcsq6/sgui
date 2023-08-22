@@ -87,8 +87,9 @@ private:
 
 	} M_mouse;
 
-	void init();
-	void handle_children_input(const std::vector<object *> &children, vec2 absolute_min) const;
+	// creates window
+	void create();
+	void handle_children_input(const std::vector<std::shared_ptr<object>> &children, vec2 absolute_min) const;
 	void set_clickable_pressed(clickable *c) const;
 
 	void draw_raw(const window *, vec2) const override;
