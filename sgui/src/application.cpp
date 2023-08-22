@@ -76,8 +76,4 @@ int application::run()
 	return APP_SUCCESS;
 }
 
-void application::do_flags(int flags)
-{
-}
-
 SGUI_END

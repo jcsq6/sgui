@@ -21,8 +21,8 @@ class window;
 class object
 {
 public:
-	inline object() : M_parent{} {}
-	inline object(object *parent) : M_parent{ parent }
+	inline object() : M_parent{}, M_flags{} {}
+	inline object(object *parent) : M_parent{ parent }, M_flags{}
 	{
 		M_parent->M_children.push_back(this);
 	}
@@ -32,13 +32,14 @@ public:
 	inline object *parent() const { return M_parent; }
 	const std::vector<object *> children() const { return M_children; }
 	
-	void attach(object *parent, int flags = 0)
+	void attach(object &parent, int flags = 0)
 	{
 		detach();
 
-		M_parent = parent;
-		do_flags(flags);
-		M_parent->M_children.push_back(this);
+		M_flags = flags;
+		M_parent = &parent;
+		parent.M_children.push_back(this);
+		parent.on_attach(this);
 	}
 
 	void detach()
@@ -67,12 +68,18 @@ public:
 	
 	// returns minimum point for object in reference to greatest-grandparent/parent's minimum
 	vec2 absolute_min() const;
+	
+	// call before use (will call do_flags for this and M_children)
+	void setup();
 protected:
 	object *M_parent;
 	std::vector<object *> M_children;
+	int M_flags;
 	
-	// setup *this* in reference to M_parent according to flags
-	virtual void do_flags(int flags) = 0;
+	// setup *this* in reference to M_parent according to M_flags
+	virtual void do_flags();
+	// function in parent class when a child *child* is attached to it
+	virtual void on_attach(object *child) const;
 };
 
 SGUI_END

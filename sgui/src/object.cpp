@@ -39,4 +39,19 @@ vec2 object::absolute_min() const
 	return min();
 }
 
+void object::do_flags()
+{
+}
+
+void object::on_attach(object *child) const
+{
+}
+
+void object::setup()
+{
+	do_flags();
+	for (auto o : M_children)
+		o->setup();
+}
+
 SGUI_END

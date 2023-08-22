@@ -92,7 +92,7 @@ private:
 	void set_clickable_pressed(clickable *c) const;
 
 	void draw_raw(const window *, vec2) const override;
-	void do_flags(int flags) override;
+	void on_attach(object *child) const override;
 
 	friend application;
 	friend object;

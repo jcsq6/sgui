@@ -42,8 +42,10 @@ void window::draw_raw(const window *, vec2) const
 	glfwSwapBuffers(M_window);
 }
 
-void window::do_flags(int flags)
+void window::on_attach(object *child) const
 {
+	if (M_window)
+		child->setup();
 }
 
 void window::handle_children_input(const std::vector<object *> &children, vec2 absolute_min) const
@@ -122,6 +124,9 @@ void window::set_clickable_pressed(clickable *c) const
 
 void window::run()
 {
+	for (auto w : M_children)
+		w->setup();
+
 	while (!glfwWindowShouldClose(M_window))
 	{
 		M_mouse.loc_changed = false;

@@ -55,7 +55,6 @@ public:
 	bool in_bounds(vec2 loc, vec2 absolute_min) const override;
 
 	vec2 min() const override;
-
 	vec2 max() const { return M_min + M_dims; }
 	vec2 center() const { return M_min + M_dims / 2; }
 	vec2 size() const override;
@@ -94,7 +93,7 @@ public:
 	bool in_bounds(vec2 loc, vec2 absolute_min) const override;
 protected:
 	void draw_raw(const window *win, vec2 absolute_min) const override;
-	void do_flags(int flags) override;
+	void do_flags() override;
 };
 
 SGUI_END

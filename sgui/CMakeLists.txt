@@ -1,6 +1,6 @@
 ﻿cmake_minimum_required(VERSION 3.4)
 
-add_library(sgui STATIC  "src/application.cpp" "src/error.cpp" "src/window.cpp" "src/widget.cpp" "src/shaders.cpp" "include/graphics/texture.h" "include/utils/context_lock.h" "src/texture.cpp" "src/help.h" "include/graphics/buffers.h" "src/help.cpp" "include/graphics/viewport.h" "src/object.cpp")
+add_library(sgui STATIC  "src/application.cpp" "src/error.cpp" "src/window.cpp" "src/widget.cpp" "src/shaders.cpp" "include/graphics/texture.h" "include/utils/context_lock.h" "src/texture.cpp" "src/help.h" "include/graphics/buffers.h" "src/help.cpp" "include/graphics/viewport.h" "src/object.cpp"  "include/gui/text.h" "src/text.cpp")
 
 target_include_directories(sgui PUBLIC include)
 

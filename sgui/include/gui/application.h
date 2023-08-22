@@ -18,8 +18,6 @@ public:
 private:
 	window* M_window;
 
-	void do_flags(int flags) override;
-
 	friend window;
 };
 
